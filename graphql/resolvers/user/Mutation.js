@@ -10,8 +10,10 @@ const {
 
 const { User } = require("../../../models/User");
 const { deleteUser } = require("./deleteUser");
-const { SECRET_KEY } = require("../../../config");
 const checkAuth = require("../../../util/check-auth");
+
+const SECRET_KEY = process.env.SECRET_KEY;
+console.log("SECRET KEY" + SECRET_KEY);
 
 const generateToken = ({ _id, username, email }) => {
   return jwt.sign(
@@ -73,11 +75,13 @@ module.exports = {
 
     login: async (_, { username, password }) => {
       const { valid, errors } = validateLoginInput(username, password);
+
       if (!valid) {
         throw new UserInputError("Bad user input", { errors });
       }
 
       const user = await User.findOne({ username });
+
       if (!user) {
         throw new UserInputError("User not found", {
           errors: { username: "User not found" },
@@ -85,6 +89,7 @@ module.exports = {
       }
 
       const match = await bcrypt.compare(password, user.password);
+
       if (!match)
         throw new UserInputError("Bad user input", {
           errors: { password: "Incorrect password entered" },
