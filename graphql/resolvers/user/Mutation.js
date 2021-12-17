@@ -13,7 +13,6 @@ const { deleteUser } = require("./deleteUser");
 const checkAuth = require("../../../util/check-auth");
 
 const SECRET_KEY = process.env.SECRET_KEY;
-console.log("SECRET KEY" + SECRET_KEY);
 
 const generateToken = ({ _id, username, email }) => {
   return jwt.sign(
